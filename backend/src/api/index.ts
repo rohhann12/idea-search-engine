@@ -8,14 +8,21 @@ app.get("/",(req:any,res:any)=>{
 app.get('/data', async (req: any, res: any) => {
   try {
     const data = await dataExtractor();
-    const emebed= await fetch("http://embedding-service:8000/embed",{
-      method:"POST",
-      headers:{
-        "Content-Type":"appplication/json"
-      },
-      body:JSON.stringify({data})
-    })
-    console.log("emeber",emebed)
+    let emebed;
+    try {
+      emebed = await fetch("http://embedding-service:8001/embed",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({text: JSON.stringify(data)})
+      });
+      console.log("embed status:", emebed.status);
+      const embedData = await emebed.json();
+      console.log("embed response:", embedData);
+    } catch (embedError) {
+      console.error("embed fetch failed:", embedError);
+    }
     res.json(data);
   } catch (error) {
     console.error('Error fetching data:', error);

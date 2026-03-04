@@ -21,7 +21,9 @@ async function dataExtractor(){
 }
 
 function writeToFile(data:any){
-    fs.writeFileSync("backend/src/data/init.json", JSON.stringify(data, null, 2))
+    const dir = '/app/data';
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(`${dir}/init.json`, JSON.stringify(data, null, 2))
 }
 
 module.exports = { dataExtractor };

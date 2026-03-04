@@ -11,16 +11,28 @@ services:
     environment:
       IS_PERSISTENT: TRUE
       PERSIST_DIRECTORY: /chroma/chroma
+    networks:
+      - app-network
   embedding-service:
     build: ./embedding-service
     container_name: embedding-service
     ports:
-      - "8001:8000"
+      - "8001:8001"
+    networks:
+      - app-network
 
   backend:
     build: ./backend
+    ports:
+      - "3004:3004"
     depends_on:
       - embedding-service
       - chromadb
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
 volumes:
   chroma_data:
