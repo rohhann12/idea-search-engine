@@ -15,11 +15,12 @@ services:
     build: ./embedding-service
     container_name: embedding-service
     ports:
-      - "8000:8000"
+      - "8001:8000"
 
   backend:
     build: ./backend
     depends_on:
       - embedding-service
+      - chromadb
 volumes:
   chroma_data:

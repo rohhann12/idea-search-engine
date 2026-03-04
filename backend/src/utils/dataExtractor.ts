@@ -1,4 +1,4 @@
-const {fs} =require('fs');
+const fs =require('fs');
 async function dataExtractor(){
    try {
      const url="https://www.reddit.com/r/Startup_Ideas/new.json?limit=100"
@@ -9,20 +9,19 @@ async function dataExtractor(){
     })
     const data=await req.json();
     console.log("data",data)
-    data.data.children.forEach((post:any) => {
-        const p=post.data
-        console.log("title",p.title)
-        console.log("title",p.selftext)
-
-    });
+    const posts = data.data.children.map((post:any) => ({
+        title: post.data.title,
+        body: post.data.selftext,
+    }));
+    writeToFile(posts);
     return data;
    } catch (error) {
     console.log(error)
    }
 }
 
-function writeToFile(data:any,destination:string){
-
+function writeToFile(data:any){
+    fs.writeFileSync("backend/src/data/init.json", JSON.stringify(data, null, 2))
 }
 
 module.exports = { dataExtractor };

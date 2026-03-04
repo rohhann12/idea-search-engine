@@ -12,4 +12,4 @@ class TextReq(BaseModel):
 @app.post("/embed")
 def embed_text(req:TextReq):
     embed=model.encode(req.text).tolist()
-    return {"embedding":embedding}
+    return {"embedding":embed}
