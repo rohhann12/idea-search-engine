@@ -13,6 +13,7 @@ services:
       PERSIST_DIRECTORY: /chroma/chroma
     networks:
       - app-network
+
   embedding-service:
     build: ./embedding-service
     container_name: embedding-service
@@ -23,11 +24,24 @@ services:
 
   backend:
     build: ./backend
+    container_name: backend
     ports:
       - "3004:3004"
     depends_on:
       - embedding-service
       - chromadb
+    networks:
+      - app-network
+
+  ui:
+    build: ./ui
+    container_name: ui
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3004
+    depends_on:
+      - backend
     networks:
       - app-network
 
